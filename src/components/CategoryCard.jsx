@@ -62,12 +62,7 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
                 <View style={styles.header}>
                     {isEditingName && editMode ? (
                         <>
-                            <TextInput
-                                style={styles.catNameInput}
-                                value={editedName}
-                                onChangeText={setEditedName}
-                                placeholder="Nombre categoría"
-                            />
+                            <TextInput style={styles.catNameInput} value={editedName} onChangeText={setEditedName} placeholder="Nombre categoría" />
                             <TouchableOpacity style={styles.iconBtn} onPress={saveCatName}>
                                 <Text style={styles.iconText}>✔️</Text>
                             </TouchableOpacity>
@@ -80,10 +75,7 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
                             <Text style={styles.title}>{category.name}</Text>
                             {editMode && (
                                 <>
-                                    <TouchableOpacity
-                                        style={styles.iconBtn}
-                                        onPress={() => setIsEditingName(true)}
-                                    >
+                                    <TouchableOpacity style={styles.iconBtn} onPress={() => setIsEditingName(true)}>
                                         <Text style={styles.iconText}>✏️</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.iconBtn} onPress={deleteCat}>
@@ -95,40 +87,20 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
                     )}
                 </View>
 
-                <Image
-                    source={require("../../assets/images/coffee.jpg")}
-                    style={styles.categoryImage}
-                    resizeMode="contain"
-                />
+                <Image source={require("../../assets/images/coffee.jpg")} style={styles.categoryImage} resizeMode="contain" />
 
                 {category.products.length === 0 ? (
                     <Text style={styles.empty}>Sin productos</Text>
                 ) : (
                     category.products.map((p) => (
-                        <ProductRow
-                            key={p.id}
-                            product={p}
-                            editMode={editMode}
-                            onUpdated={onUpdated}
-                        />
+                        <ProductRow key={p.id} product={p} editMode={editMode} onUpdated={onUpdated}/>
                     ))
                 )}
 
                 {editMode && (
                     <View style={styles.addDishForm}>
-                        <TextInput
-                            style={[styles.input, styles.inputNombre]}
-                            placeholder="Nombre"
-                            value={nombreProducto}
-                            onChangeText={setNombreProducto}
-                        />
-                        <TextInput
-                            style={[styles.input, styles.inputPrecio]}
-                            placeholder="Precio"
-                            keyboardType="numeric"
-                            value={precioProducto}
-                            onChangeText={setPrecioProducto}
-                        />
+                        <TextInput style={[styles.input, styles.inputNombre]} placeholder="Nombre" value={nombreProducto} onChangeText={setNombreProducto}/>
+                        <TextInput  style={[styles.input, styles.inputPrecio]} placeholder="Precio" keyboardType="numeric" value={precioProducto} onChangeText={setPrecioProducto} />
                         <TouchableOpacity style={styles.addBtn} onPress={addItem}>
                             <Text style={styles.addBtnText}>+</Text>
                         </TouchableOpacity>

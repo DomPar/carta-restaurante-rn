@@ -33,7 +33,7 @@ export default function ProductRow({ product, editMode, onUpdated }) {
         const priceNumber = parseFloat(editedPrice.replace(",", "."));
 
         if (!name || Number.isNaN(priceNumber)) {
-            // si está mal, volvemos al valor original
+            // por si no es un valor correcto, volvemos al valor original
             setIsEditing(false);
             setEditedName(product.name);
             setEditedPrice(
@@ -76,19 +76,8 @@ export default function ProductRow({ product, editMode, onUpdated }) {
         <View style={styles.row}>
             {isEditing && editMode ? (
                 <>
-                    <TextInput
-                        style={[styles.input, styles.nameInput]}
-                        value={editedName}
-                        onChangeText={setEditedName}
-                        placeholder="Nombre"
-                    />
-                    <TextInput
-                        style={[styles.input, styles.priceInput]}
-                        value={editedPrice}
-                        onChangeText={setEditedPrice}
-                        placeholder="Precio"
-                        keyboardType="numeric"
-                    />
+                    <TextInput style={[styles.input, styles.nameInput]} value={editedName} onChangeText={setEditedName} placeholder="Nombre" />
+                    <TextInput style={[styles.input, styles.priceInput]} value={editedPrice} onChangeText={setEditedPrice} placeholder="Precio" keyboardType="numeric" />
                     <TouchableOpacity style={styles.iconBtn} onPress={saveProduct}>
                         <Text style={styles.iconText}>✔️</Text>
                     </TouchableOpacity>
@@ -103,10 +92,7 @@ export default function ProductRow({ product, editMode, onUpdated }) {
 
                     {editMode && (
                         <>
-                            <TouchableOpacity
-                                style={styles.iconBtn}
-                                onPress={() => setIsEditing(true)}
-                            >
+                            <TouchableOpacity style={styles.iconBtn} onPress={() => setIsEditing(true)} >
                                 <Text style={styles.iconText}>✏️</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.iconBtn} onPress={removeProduct}>

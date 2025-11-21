@@ -59,37 +59,22 @@ export default function Index() {
 
     return (
         <SafeAreaView style={styles.screen}>
-            <ImageBackground
-                source={require("../assets/images/beans.jpg")}
-                style={styles.bg}
-                resizeMode="cover"
-            >
+            <ImageBackground source={require("../assets/images/beans.jpg")} style={styles.bg} resizeMode="cover" >
                 <View style={styles.menuWrapper}>
                     <View style={styles.menuCard}>
                         <Text style={styles.title}>CAMPER CAFE</Text>
                         <Text style={styles.subtitle}>Est. 2020</Text>
-
                         <View style={styles.topDivider} />
-
                         <Text style={styles.editToggle} onPress={toggleEdit}>
                             {editMode ? "X" : "✏️"}
                         </Text>
-
                         <View style={styles.mainMenu}>
                             <FlatList
-                                contentContainerStyle={styles.menuList}
-                                data={menu}
-                                keyExtractor={(item) => String(item.id)}
-                                renderItem={({ item }) => (
-                                    <CategoryCard
-                                        category={item}
-                                        editMode={editMode}
-                                        onUpdated={load}
-                                    />
+                                contentContainerStyle={styles.menuList} data={menu} keyExtractor={(item) => String(item.id)} renderItem={({ item }) => (
+                                    <CategoryCard category={item} editMode={editMode} onUpdated={load} />
                                 )}
                                 refreshControl={
-                                    <RefreshControl
-                                        refreshing={refreshing}
+                                    <RefreshControl refreshing={refreshing}
                                         onRefresh={() => {
                                             setRefreshing(true);
                                             load();
@@ -98,25 +83,15 @@ export default function Index() {
                                 }
                                 showsVerticalScrollIndicator={false}
                             />
-
                             {editMode && (
                                 <View style={styles.addCategoryContainer}>
-                                    <TextInput
-                                        style={styles.addCategoryInput}
-                                        placeholder="Nombre nueva categoría"
-                                        value={newCategoryName}
-                                        onChangeText={setNewCategoryName}
-                                    />
-                                    <TouchableOpacity
-                                        style={styles.addCategoryBtn}
-                                        onPress={handleAddCategory}
-                                    >
+                                    <TextInput style={styles.addCategoryInput} placeholder="Nombre nueva categoría" value={newCategoryName} onChangeText={setNewCategoryName}/>
+                                    <TouchableOpacity style={styles.addCategoryBtn} onPress={handleAddCategory}>
                                         <Text style={styles.addCategoryBtnText}>+</Text>
                                     </TouchableOpacity>
                                 </View>
                             )}
                         </View>
-
                         <View style={styles.footer}>
                             <View style={styles.bottomDivider} />
                             <Text style={styles.footerLink}>Visit our website</Text>
