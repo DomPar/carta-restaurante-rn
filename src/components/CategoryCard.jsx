@@ -1,5 +1,7 @@
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import {
+    Alert,
     Image,
     StyleSheet,
     Text,
@@ -15,6 +17,11 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
     const [editedName, setEditedName] = useState(category.name);
     const [nombreProducto, setNombreProducto] = useState("");
     const [precioProducto, setPrecioProducto] = useState("");
+    const [imageUri, setImageUri] = useState(
+        category.photoURL && category.photoURL !== ""
+            ? { uri: category.photoURL }
+            : null
+    );
 
     const saveCatName = async () => {
         const trimmed = editedName.trim();
@@ -27,7 +34,9 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
             await updateCategory(category.id, trimmed);
             setIsEditingName(false);
             onUpdated && onUpdated();
-        } catch (e) { }
+        } catch (e) {
+            Alert.alert("Error", "No se pudo actualizar la categoría.");
+        }
     };
 
     const cancelCatEdit = () => {
@@ -39,7 +48,9 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
         try {
             await deleteCategory(category.id);
             onUpdated && onUpdated();
-        } catch (e) { }
+        } catch (e) {
+            Alert.alert("Error", "No se pudo borrar la categoría.");
+        }
     };
 
     const addItem = async () => {
@@ -53,8 +64,54 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
             setNombreProducto("");
             setPrecioProducto("");
             onUpdated && onUpdated();
-        } catch (e) { }
+        } catch (e) {
+            Alert.alert("Error", "No se pudo añadir el producto.");
+        }
     };
+
+    async function pickImageFromGallery() {
+        const { status } =
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert(
+                "Permiso requerido",
+                "Necesito acceso a la galería para seleccionar una imagen."
+            );
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const uri = result.assets[0].uri;
+            setImageUri({ uri });
+        }
+    }
+
+    async function pickImageFromCamera() {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert(
+                "Permiso requerido",
+                "Necesito acceso a la cámara para tomar una foto."
+            );
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const uri = result.assets[0].uri;
+            setImageUri({ uri });        }
+    }
 
     return (
         <View style={styles.dishesCardContainer}>
@@ -62,7 +119,12 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
                 <View style={styles.header}>
                     {isEditingName && editMode ? (
                         <>
-                            <TextInput style={styles.catNameInput} value={editedName} onChangeText={setEditedName} placeholder="Nombre categoría" />
+                            <TextInput
+                                style={styles.catNameInput}
+                                value={editedName}
+                                onChangeText={setEditedName}
+                                placeholder="Nombre categoría"
+                            />
                             <TouchableOpacity style={styles.iconBtn} onPress={saveCatName}>
                                 <Text style={styles.iconText}>✔️</Text>
                             </TouchableOpacity>
@@ -75,7 +137,10 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
                             <Text style={styles.title}>{category.name}</Text>
                             {editMode && (
                                 <>
-                                    <TouchableOpacity style={styles.iconBtn} onPress={() => setIsEditingName(true)}>
+                                    <TouchableOpacity
+                                        style={styles.iconBtn}
+                                        onPress={() => setIsEditingName(true)}
+                                    >
                                         <Text style={styles.iconText}>✏️</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.iconBtn} onPress={deleteCat}>
@@ -87,20 +152,59 @@ export default function CategoryCard({ category, editMode, onUpdated }) {
                     )}
                 </View>
 
-                <Image source={require("../../assets/images/coffee.jpg")} style={styles.categoryImage} resizeMode="contain" />
+                <Image
+                    source={
+                        imageUri || require("../../assets/images/coffee.jpg")
+                    }
+                    style={styles.categoryImage}
+                    resizeMode="contain"
+                />
+
+                {editMode && (
+                    <View style={styles.imageButtonsRow}>
+                        <TouchableOpacity
+                            style={styles.imageBtn}
+                            onPress={pickImageFromGallery}
+                        >
+                            <Text style={styles.imageBtnText}>Galería</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.imageBtn}
+                            onPress={pickImageFromCamera}
+                        >
+                            <Text style={styles.imageBtnText}>Cámara</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
                 {category.products.length === 0 ? (
                     <Text style={styles.empty}>Sin productos</Text>
                 ) : (
                     category.products.map((p) => (
-                        <ProductRow key={p.id} product={p} editMode={editMode} onUpdated={onUpdated}/>
+                        <ProductRow
+                            key={p.id}
+                            product={p}
+                            editMode={editMode}
+                            onUpdated={onUpdated}
+                        />
                     ))
                 )}
 
                 {editMode && (
                     <View style={styles.addDishForm}>
-                        <TextInput style={[styles.input, styles.inputNombre]} placeholder="Nombre" value={nombreProducto} onChangeText={setNombreProducto}/>
-                        <TextInput  style={[styles.input, styles.inputPrecio]} placeholder="Precio" keyboardType="numeric" value={precioProducto} onChangeText={setPrecioProducto} />
+                        <TextInput
+                            style={[styles.input, styles.inputNombre]}
+                            placeholder="Nombre"
+                            value={nombreProducto}
+                            onChangeText={setNombreProducto}
+                        />
+                        <TextInput
+                            style={[styles.input, styles.inputPrecio]}
+                            placeholder="Precio"
+                            keyboardType="numeric"
+                            value={precioProducto}
+                            onChangeText={setPrecioProducto}
+                        />
                         <TouchableOpacity style={styles.addBtn} onPress={addItem}>
                             <Text style={styles.addBtnText}>+</Text>
                         </TouchableOpacity>
@@ -151,11 +255,28 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     categoryImage: {
-        width: 40,
-        height: 40,
+        width: 70,
+        height: 70,
         alignSelf: "center",
         marginBottom: 6,
         marginTop: 2,
+    },
+    imageButtonsRow: {
+        flexDirection: "row",
+        justifyContent: "center",
+        marginBottom: 6,
+        gap: 8,
+    },
+    imageBtn: {
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 16,
+        backgroundColor: "rgb(136,124,107)",
+        marginHorizontal: 4,
+    },
+    imageBtnText: {
+        color: "#fff",
+        fontSize: 12,
     },
     empty: {
         color: "#555",

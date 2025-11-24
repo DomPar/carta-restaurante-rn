@@ -4,3 +4,6 @@
 
 18/10/25 -> Rama version-native.
 
+## Integrar imágenes, uso de la cámara y mapas a la App
+
+24/11/2025 -> Rama main.

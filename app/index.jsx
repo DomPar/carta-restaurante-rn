@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryCard from "../src/components/CategoryCard";
+import MapSection from "../src/components/MapSection";
 import { addCategory, getAllMenuData } from "../src/services/api";
 
 export default function Index() {
@@ -59,22 +60,37 @@ export default function Index() {
 
     return (
         <SafeAreaView style={styles.screen}>
-            <ImageBackground source={require("../assets/images/beans.jpg")} style={styles.bg} resizeMode="cover" >
+            <ImageBackground
+                source={require("../assets/images/beans.jpg")}
+                style={styles.bg}
+                resizeMode="cover"
+            >
                 <View style={styles.menuWrapper}>
                     <View style={styles.menuCard}>
                         <Text style={styles.title}>CAMPER CAFE</Text>
                         <Text style={styles.subtitle}>Est. 2020</Text>
+
                         <View style={styles.topDivider} />
+
                         <Text style={styles.editToggle} onPress={toggleEdit}>
                             {editMode ? "X" : "✏️"}
                         </Text>
+
                         <View style={styles.mainMenu}>
                             <FlatList
-                                contentContainerStyle={styles.menuList} data={menu} keyExtractor={(item) => String(item.id)} renderItem={({ item }) => (
-                                    <CategoryCard category={item} editMode={editMode} onUpdated={load} />
+                                contentContainerStyle={styles.menuList}
+                                data={menu}
+                                keyExtractor={(item) => String(item.id)}
+                                renderItem={({ item }) => (
+                                    <CategoryCard
+                                        category={item}
+                                        editMode={editMode}
+                                        onUpdated={load}
+                                    />
                                 )}
                                 refreshControl={
-                                    <RefreshControl refreshing={refreshing}
+                                    <RefreshControl
+                                        refreshing={refreshing}
                                         onRefresh={() => {
                                             setRefreshing(true);
                                             load();
@@ -83,19 +99,36 @@ export default function Index() {
                                 }
                                 showsVerticalScrollIndicator={false}
                             />
+
                             {editMode && (
                                 <View style={styles.addCategoryContainer}>
-                                    <TextInput style={styles.addCategoryInput} placeholder="Nombre nueva categoría" value={newCategoryName} onChangeText={setNewCategoryName}/>
-                                    <TouchableOpacity style={styles.addCategoryBtn} onPress={handleAddCategory}>
+                                    <TextInput
+                                        style={styles.addCategoryInput}
+                                        placeholder="Nombre nueva categoría"
+                                        value={newCategoryName}
+                                        onChangeText={setNewCategoryName}
+                                    />
+                                    <TouchableOpacity
+                                        style={styles.addCategoryBtn}
+                                        onPress={handleAddCategory}
+                                    >
                                         <Text style={styles.addCategoryBtnText}>+</Text>
                                     </TouchableOpacity>
                                 </View>
                             )}
                         </View>
+
                         <View style={styles.footer}>
                             <View style={styles.bottomDivider} />
-                            <Text style={styles.footerLink}>Visit our website</Text>
-                            <Text style={styles.footerText}>123 Free Code Camp Drive</Text>
+                            <View style={styles.footerContent}>
+                                <View style={styles.footerTextBlock}>
+                                    <Text style={styles.footerLink}>Visit our website</Text>
+                                    <Text style={styles.footerText}>
+                                        123 Free Code Camp Drive
+                                    </Text>
+                                </View>
+                                <MapSection />
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -160,7 +193,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         textAlign: "center",
         textAlignVertical: "center",
-        backgroundColor: "#e29d42ff",
+        backgroundColor: "#f5f5f5",
         fontSize: 18,
         lineHeight: 32,
     },
@@ -203,13 +236,22 @@ const styles = StyleSheet.create({
         marginTop: -1,
     },
     footer: {
-        alignItems: "center",
+        marginTop: 8,
     },
     bottomDivider: {
         borderBottomWidth: 2,
         borderBottomColor: "#8b0000",
         alignSelf: "stretch",
-        marginBottom: 12,
+        marginBottom: 8,
+    },
+    footerContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    footerTextBlock: {
+        flex: 1,
+        alignItems: "center",
     },
     footerLink: {
         textDecorationLine: "underline",
