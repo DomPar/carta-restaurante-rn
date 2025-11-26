@@ -123,9 +123,7 @@ export default function Index() {
                             <View style={styles.footerContent}>
                                 <View style={styles.footerTextBlock}>
                                     <Text style={styles.footerLink}>Visit our website</Text>
-                                    <Text style={styles.footerText}>
-                                        123 Free Code Camp Drive
-                                    </Text>
+                                    <Text style={styles.footerText}>23 Free Code Camp Drive</Text>
                                 </View>
                                 <MapSection />
                             </View>
